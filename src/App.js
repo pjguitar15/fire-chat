@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+// contexts
+import AuthContext from './contexts/AuthContext'
+import FirestoreContext from './contexts/FiretoreContext'
+// Private Route
+import PrivateRoute from './routes/PrivateRoute'
+// pages
+import Main from './pages/main/Main.jsx'
+import LoginPage from './pages/login/LoginPage.jsx'
+import SignUpPage from './pages/signup/SignUpPage.jsx'
+const App = () => {
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <AuthContext>
+        <FirestoreContext>
+          <Switch>
+            <PrivateRoute exact path='/' component={Main} />
+            <PrivateRoute exact path='/chat/:param' component={Main} />
+            <Route path='/login' component={LoginPage} />
+            <Route path='/signup' component={SignUpPage} />
+          </Switch>
+        </FirestoreContext>
+      </AuthContext>
+    </Router>
+  )
 }
 
-export default App;
+export default App
