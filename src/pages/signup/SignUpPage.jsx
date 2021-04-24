@@ -35,18 +35,19 @@ const SignUpPage = () => {
           lg='4'
           md='12'
         >
-          <h6>Company Name</h6>
+          <h6 className='text-white'>
+            Built with <i className='fab fa-react'></i> React
+          </h6>
           <div className='d-flex flex-column mt-5 text-center justify-content-center align-items-center'>
             <Logo
-              style={{ fontSize: '8rem' }}
-              className='fab fa-instalod'
+              style={{ fontSize: '6rem' }}
+              className='fas fa-comments my-5'
             ></Logo>
-            <h1 className='display-4 mt-5'>Chat Web App</h1>
-            <p className='mt-2 col-xl-10 col-lg-12 col-sm-12 lead text-justify'>
+            <h1 className='display-4 mt-4 text-white'>Chat Web App</h1>
+            <p className='mt-2 col-xl-10 col-lg-12 col-sm-12 lead text-center'>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
               perferendis vero impedit. Rem, quia sint. Molestias, ipsa fugit
-              dignissimos magni illo, corporis, ratione reprehenderit cupiditate
-              ab aliquid deleniti quasi aspernatur?
+              dignissimos.
             </p>
           </div>
         </Col>

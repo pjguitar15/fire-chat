@@ -1,10 +1,15 @@
 import React, { useContext, useState } from 'react'
 import { Logout, CurrentUser } from '../../contexts/AuthContext.jsx'
 import { useHistory, useParams } from 'react-router-dom'
-import { CreateNewChat, GetChats } from '../../contexts/FiretoreContext.jsx'
+import {
+  CreateNewChat,
+  GetChats,
+  AddChat
+} from '../../contexts/FiretoreContext.jsx'
 import { Row, Col, Button as BootstrapBtn, Form } from 'react-bootstrap'
 import { Modal, Button } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment'
 import {
   ChatForm,
   EmojiButton,
@@ -12,6 +17,7 @@ import {
   EmojiCard,
   SidebarChatItem
 } from './Styles.jsx'
+import Chatbox from './Chatbox.jsx'
 import Picker from 'emoji-picker-react'
 const Main = () => {
   const [emojiShow, setEmojiShow] = useState(false)
@@ -25,8 +31,9 @@ const Main = () => {
   // context
   const logout = useContext(Logout)
   const createNewChat = useContext(CreateNewChat)
+  const addChat = useContext(AddChat)
   const [chatData] = useContext(GetChats)
-  const [currentUser, setCurrentUser] = useContext(CurrentUser)
+  const [currentUser] = useContext(CurrentUser)
   const history = useHistory()
   const { param } = useParams()
   // functions
@@ -36,8 +43,18 @@ const Main = () => {
   }
   const formSubmit = e => {
     e.preventDefault()
-    console.log(chatValue)
+    // console.log(chatValue)
     setChatValue('')
+    // take email, id, message as objects
+    addChat(
+      {
+        email: currentUser.email,
+        id: uuidv4(),
+        message: chatValue,
+        date: moment().format('llll')
+      },
+      param
+    )
   }
   const showModal = () => {
     setVisible(true)
@@ -50,7 +67,12 @@ const Main = () => {
         host: currentUser.email,
         title: chatTitleInput,
         chats: [
-          { id: uuidv4(), email: currentUser.email, message: initialChat }
+          {
+            id: uuidv4(),
+            email: currentUser.email,
+            message: initialChat,
+            date: moment().format('llll')
+          }
         ]
       })
       setChatTitleInput('')
@@ -69,8 +91,8 @@ const Main = () => {
     console.log('Clicked cancel button')
     setVisible(false)
   }
-  const chatItemClicked = id => {
-    history.push(`/chat/${id}`)
+  const chatItemClicked = item => {
+    history.push(`/chat/${item.id}`)
   }
   return (
     <div>
@@ -107,11 +129,11 @@ const Main = () => {
           <div className='text-center'>
             <i
               style={{ fontSize: '6rem' }}
-              className='my-4 fab fa-instalod'
+              className='fas fa-comments my-5'
             ></i>
             <h3 className='text-white'>
-              Welcome!{' '}
-              {currentUser.email.slice(0, currentUser.email.indexOf('@'))}
+              Welcome{' '}
+              {currentUser.email.slice(0, currentUser.email.indexOf('@'))}!
             </h3>
             <p className='lead'>
               Create a chat room by clicking Create Chat Room
@@ -122,18 +144,25 @@ const Main = () => {
           </div>
 
           <h5 className='text-white'>Chats</h5>
-          {chatData.map((item, index) => (
-            <SidebarChatItem
-              onClick={() => chatItemClicked(item.id)}
-              key={index}
-              className='bg-light my-2 text-dark p-3 rounded'
-            >
-              <div>
-                <h5 className='p-0 m-0'>{item.title}</h5>
-                <p className='p-0 m-0'>{item.chats.length} people</p>
-              </div>
-            </SidebarChatItem>
-          ))}
+          <div
+            style={{ height: '32rem', maxHeight: '32rem', overflow: 'scroll' }}
+          >
+            {chatData.map((item, index) => (
+              <SidebarChatItem
+                onClick={() => chatItemClicked(item)}
+                key={index}
+                className='bg-light my-2 text-dark p-3 rounded'
+              >
+                <div>
+                  <h5 className='p-0 m-0'>{item.title}</h5>
+                  <p className='p-0 m-0'>
+                    {item.chats.length} message
+                    {item.chats.length > 1 ? 's' : ''}
+                  </p>
+                </div>
+              </SidebarChatItem>
+            ))}
+          </div>
 
           <BootstrapBtn
             style={{ bottom: '1rem', left: '0', right: '0', margin: 'auto' }}
@@ -145,7 +174,7 @@ const Main = () => {
           </BootstrapBtn>
         </Col>
         <Col lg='9' className='position-relative'>
-          <h1>Test</h1>
+          <Chatbox />
           {/* Bottom Fixed Chat Form */}
           <div
             className='position-absolute p-4 bg-white'

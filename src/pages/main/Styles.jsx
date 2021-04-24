@@ -41,6 +41,7 @@ export const ImageUploadButton = styled.i`
 `
 export const SidebarChatItem = styled.div`
   cursor: pointer;
+  margin: 0 10px;
   transition: box-shadow 100ms ease-in-out;
   &:hover {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
