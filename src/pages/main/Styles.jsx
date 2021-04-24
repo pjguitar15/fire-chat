@@ -49,8 +49,8 @@ export const SidebarChatItem = styled.div`
   }
 `
 export const SidebarChatWrapper = styled.div`
-  height: 32rem;
-  max-height: 32rem;
+  height: 16rem;
+  max-height: 16rem;
   overflow-y: scroll;
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

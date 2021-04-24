@@ -13,7 +13,7 @@ const ChatBoxWrapper = styled.div`
   height: 85vh;
   max-height: 85vh;
   overflow: scroll;
-  margin-top: 5rem;
+  margin-top: 3.5rem;
   padding: 2rem;
   &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -59,7 +59,7 @@ const Chatbox = () => {
         .filter(item => item.id === param)
         .map((item, index) => (
           <div key={index}>
-            <h4 className='mt-4 position-absolute' style={{ top: '0' }}>
+            <h4 className='mt-3 position-absolute' style={{ top: '0' }}>
               {item.title}
             </h4>
             {item.chats.map((item, index) => (
