@@ -7,12 +7,13 @@ const ChatItem = styled.div`
   background: #f7f7f7;
   max-width: 40%;
   margin: 1rem 0;
+  border-radius: 10px;
   /* margin: auto; */
 `
 const ChatBoxWrapper = styled.div`
   height: 85vh;
   max-height: 85vh;
-  overflow: scroll;
+  overflow-y: scroll;
   margin-top: 3.5rem;
   padding: 2rem;
   &::-webkit-scrollbar-track {
