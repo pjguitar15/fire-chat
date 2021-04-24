@@ -9,16 +9,45 @@ const ChatItem = styled.div`
   margin: 1rem 0;
   /* margin: auto; */
 `
+const ChatBoxWrapper = styled.div`
+  height: 85vh;
+  max-height: 85vh;
+  overflow: scroll;
+  margin-top: 5rem;
+  padding: 2rem;
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #0ae;
+
+    background-image: -webkit-gradient(
+      linear,
+      0 0,
+      0 100%,
+      color-stop(0.5, rgba(255, 255, 255, 0.2)),
+      color-stop(0.5, transparent),
+      to(transparent)
+    );
+  }
+`
 const Chatbox = () => {
   const [chatData] = useContext(GetChats)
   const [currentUser] = useContext(CurrentUser)
   const { param } = useParams()
 
   return (
-    <div style={{ height: '90vh', maxHeight: '90vh', overflow: 'scroll' }}>
+    <ChatBoxWrapper>
       {!param && (
         <div
-          style={{ height: '90vh' }}
+          style={{ height: '85vh' }}
           className='d-flex justify-content-center align-items-center'
         >
           <h1 className='text-secondary display-4 text-center'>
@@ -30,7 +59,9 @@ const Chatbox = () => {
         .filter(item => item.id === param)
         .map((item, index) => (
           <div key={index}>
-            <h4>{item.title}</h4>
+            <h4 className='mt-4 position-absolute' style={{ top: '0' }}>
+              {item.title}
+            </h4>
             {item.chats.map((item, index) => (
               <ChatItem
                 key={index}
@@ -64,7 +95,7 @@ const Chatbox = () => {
             ))}
           </div>
         ))}
-    </div>
+    </ChatBoxWrapper>
   )
 }
 

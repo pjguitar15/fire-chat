@@ -1,13 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { Logout, CurrentUser } from '../../contexts/AuthContext.jsx'
 import { useHistory, useParams } from 'react-router-dom'
-import {
-  CreateNewChat,
-  GetChats,
-  AddChat
-} from '../../contexts/FiretoreContext.jsx'
-import { Row, Col, Button as BootstrapBtn, Form } from 'react-bootstrap'
-import { Modal, Button } from 'antd'
+import { GetChats, AddChat } from '../../contexts/FiretoreContext.jsx'
+import { Button } from 'antd'
+import { Row, Col, Button as BootstrapBtn } from 'react-bootstrap'
+import ModalComp from './ModalComp.jsx'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
 import {
@@ -15,37 +12,41 @@ import {
   EmojiButton,
   ImageUploadButton,
   EmojiCard,
-  SidebarChatItem
+  SidebarChatItem,
+  SidebarChatWrapper
 } from './Styles.jsx'
 import Chatbox from './Chatbox.jsx'
 import Picker from 'emoji-picker-react'
+
 const Main = () => {
   const [emojiShow, setEmojiShow] = useState(false)
   const [chosenEmoji, setChosenEmoji] = useState(null)
   const [chatValue, setChatValue] = useState('')
+  // const [search, setSearch] = useState('')
   const [visible, setVisible] = useState(false)
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  // modal state
-  const [chatTitleInput, setChatTitleInput] = useState('')
-  const [initialChat, setInitialChat] = useState('')
+
   // context
   const logout = useContext(Logout)
-  const createNewChat = useContext(CreateNewChat)
+
   const addChat = useContext(AddChat)
   const [chatData] = useContext(GetChats)
   const [currentUser] = useContext(CurrentUser)
   const history = useHistory()
   const { param } = useParams()
+
   // functions
+  const showModal = () => {
+    setVisible(true)
+  }
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject)
     setChatValue(chatValue + emojiObject.emoji)
   }
   const formSubmit = e => {
     e.preventDefault()
-    // console.log(chatValue)
+
     setChatValue('')
-    // take email, id, message as objects
+    // take email, id, message as object
     addChat(
       {
         email: currentUser.email,
@@ -56,71 +57,15 @@ const Main = () => {
       param
     )
   }
-  const showModal = () => {
-    setVisible(true)
-  }
-  const handleOk = async () => {
-    setConfirmLoading(true)
-    try {
-      await createNewChat({
-        id: uuidv4(),
-        host: currentUser.email,
-        title: chatTitleInput,
-        chats: [
-          {
-            id: uuidv4(),
-            email: currentUser.email,
-            message: initialChat,
-            date: moment().format('llll')
-          }
-        ]
-      })
-      setChatTitleInput('')
-      setInitialChat('')
-      setConfirmLoading(false)
-      setVisible(false)
-    } catch (error) {
-      setChatTitleInput('')
-      setInitialChat('')
-      setConfirmLoading(false)
-      console.log(error)
-      setVisible(false)
-    }
-  }
-  const handleCancel = () => {
-    console.log('Clicked cancel button')
-    setVisible(false)
-  }
+
   const chatItemClicked = item => {
     history.push(`/chat/${item.id}`)
   }
   return (
     <div>
-      <Modal
-        title='Create Chat Room'
-        visible={visible}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <Form>
-          <Form.Group>
-            <Form.Control
-              value={chatTitleInput}
-              onChange={e => setChatTitleInput(e.target.value)}
-              placeholder='Chat title'
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Control
-              value={initialChat}
-              onChange={e => setInitialChat(e.target.value)}
-              placeholder='Enter initial message'
-            />
-          </Form.Group>
-        </Form>
-      </Modal>
+      <ModalComp visible={visible} setVisible={setVisible} />
       <Row style={{ height: '100vh' }} className='m-0'>
+        {/* Sidebar Column */}
         <Col
           lg='3'
           className='text-white position-relative px-3'
@@ -144,9 +89,16 @@ const Main = () => {
           </div>
 
           <h5 className='text-white'>Chats</h5>
-          <div
-            style={{ height: '32rem', maxHeight: '32rem', overflow: 'scroll' }}
-          >
+          {/* <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className='form-control col-11 ml-2 my-2'
+            placeholder='Search for Chat rooms'
+            type='text'
+          /> */}
+
+          {/* chat rooms */}
+          <SidebarChatWrapper>
             {chatData.map((item, index) => (
               <SidebarChatItem
                 onClick={() => chatItemClicked(item)}
@@ -162,7 +114,7 @@ const Main = () => {
                 </div>
               </SidebarChatItem>
             ))}
-          </div>
+          </SidebarChatWrapper>
 
           <BootstrapBtn
             style={{ bottom: '1rem', left: '0', right: '0', margin: 'auto' }}
@@ -172,6 +124,9 @@ const Main = () => {
           >
             Logout
           </BootstrapBtn>
+          {/* End of Sidebar */}
+
+          {/* Main Column */}
         </Col>
         <Col lg='9' className='position-relative'>
           <Chatbox />
