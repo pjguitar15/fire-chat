@@ -73,22 +73,23 @@ const Main = () => {
         >
           <div className='text-center'>
             <i
-              style={{ fontSize: '6rem' }}
+              style={{ fontSize: '3rem' }}
               className='fas fa-comments my-3'
             ></i>
-            <h3 className='text-white'>
-              Welcome{' '}
-              {currentUser.email.slice(0, currentUser.email.indexOf('@'))}!
-            </h3>
-            <p className='lead'>
-              Create a chat room by clicking Create Chat Room
-            </p>
-            <Button onClick={showModal} size='sm'>
-              Create Chat Room
-            </Button>
+
+            <div className='mb-2'>
+              Logged in as{' '}
+              {currentUser.email.slice(0, currentUser.email.indexOf('@'))}
+            </div>
+
+            <div className='text-center'>
+              <Button onClick={showModal} size='sm'>
+                Create Chat Room
+              </Button>
+            </div>
           </div>
 
-          <h5 className='text-white'>Chats</h5>
+          <h5 className='text-white ml-3'>Chats</h5>
           {/* <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -99,7 +100,7 @@ const Main = () => {
 
           {/* chat rooms */}
           <SidebarChatWrapper>
-            {chatData.slice(0, 3).map((item, index) => (
+            {chatData.map((item, index) => (
               <SidebarChatItem
                 onClick={() => chatItemClicked(item)}
                 key={index}
@@ -129,7 +130,7 @@ const Main = () => {
           {/* Main Column */}
         </Col>
         <Col lg='9' className='position-relative'>
-          <Chatbox />
+          <Chatbox chatItemClicked={chatItemClicked} />
           {/* Bottom Fixed Chat Form */}
           <div
             className='position-absolute p-4 bg-white'

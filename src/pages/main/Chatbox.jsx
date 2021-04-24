@@ -38,7 +38,7 @@ const ChatBoxWrapper = styled.div`
     );
   }
 `
-const Chatbox = () => {
+const Chatbox = ({ chatItemClicked }) => {
   const [chatData] = useContext(GetChats)
   const [currentUser] = useContext(CurrentUser)
   const { param } = useParams()
@@ -50,6 +50,9 @@ const Chatbox = () => {
   useEffect(() => {
     scrollToBottom()
   }, [chatData])
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatItemClicked])
   return (
     <ChatBoxWrapper>
       {!param && (
@@ -99,9 +102,9 @@ const Chatbox = () => {
                   </p>
                 </div>
                 {/* this ref is for scroll target */}
-                <div ref={messagesEndRef} />
               </ChatItem>
             ))}
+            <div ref={messagesEndRef} />
           </div>
         ))}
     </ChatBoxWrapper>
