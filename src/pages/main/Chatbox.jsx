@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { GetChats } from '../../contexts/FiretoreContext.jsx'
 import { CurrentUser } from '../../contexts/AuthContext.jsx'
 import styled from 'styled-components'
@@ -42,7 +42,14 @@ const Chatbox = () => {
   const [chatData] = useContext(GetChats)
   const [currentUser] = useContext(CurrentUser)
   const { param } = useParams()
+  const messagesEndRef = useRef(null)
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatData])
   return (
     <ChatBoxWrapper>
       {!param && (
@@ -91,6 +98,8 @@ const Chatbox = () => {
                     {item.date}
                   </p>
                 </div>
+                {/* this ref is for scroll target */}
+                <div ref={messagesEndRef} />
               </ChatItem>
             ))}
           </div>
